@@ -734,7 +734,6 @@ public:
   const algorithmSelect = document.getElementById('algorithm-select');
 
   let currentAlgo = 'bubble';
-  let stopAnimation = false;
 
   let queueState = {
     arr: new Array(QUEUE_CAPACITY).fill(null),
@@ -911,9 +910,7 @@ public:
     let n = arr.length;
     renderStudents(arr);
     for (let i = 0; i < n - 1; i++) {
-      if (stopAnimation) return;
       for (let j = 0; j < n - i - 1; j++) {
-        if (stopAnimation) return;
         renderStudents(arr, { compared: j, active: j + 1 });
         await sleep(400);
         if (arr[j] > arr[j + 1]) {
@@ -923,7 +920,7 @@ public:
         }
       }
     }
-    if (!stopAnimation) renderStudents(arr);
+    renderStudents(arr);
   }
 
   async function linearSearchDemo(key) {
@@ -931,21 +928,16 @@ public:
     let n = arr.length;
     renderStudents(arr);
     for (let i = 0; i < n; i++) {
-      if (stopAnimation) return;
       renderStudents(arr, { active: i });
       await sleep(500);
       if (arr[i] === key) {
-        if (!stopAnimation) {
-          renderStudents(arr, {}, i);
-          alert('Student ID ' + key + ' found at index ' + i);
-        }
+        renderStudents(arr, {}, i);
+        alert('Student ID ' + key + ' found at index ' + i);
         return;
       }
     }
-    if (!stopAnimation) {
-      alert('Student ID ' + key + ' not found');
-      renderStudents(arr);
-    }
+    alert('Student ID ' + key + ' not found');
+    renderStudents(arr);
   }
 
   async function binarySearchDemo(key) {
@@ -953,15 +945,12 @@ public:
     let low = 0, high = arr.length - 1;
     renderStudents(arr);
     while (low <= high) {
-      if (stopAnimation) return;
       let mid = Math.floor(low + (high - low) / 2);
       renderStudents(arr, { active: mid });
       await sleep(600);
       if (arr[mid] === key) {
-        if (!stopAnimation) {
-          renderStudents(arr, {}, mid);
-          alert('Student ID ' + key + ' found at index ' + mid);
-        }
+        renderStudents(arr, {}, mid);
+        alert('Student ID ' + key + ' found at index ' + mid);
         return;
       } else if (arr[mid] < key) {
         low = mid + 1;
@@ -969,10 +958,8 @@ public:
         high = mid - 1;
       }
     }
-    if (!stopAnimation) {
-      alert('Student ID ' + key + ' not found');
-      renderStudents(arr);
-    }
+    alert('Student ID ' + key + ' not found');
+    renderStudents(arr);
   }
 
   async function linearQueueDemo() {
@@ -1005,7 +992,6 @@ public:
     
     renderStudents(queueState.arr, { active: queueState.front }, -1, 'linear-queue');
     await sleep(800);
-    if (stopAnimation) return;
     
     const dequeuedVal = queueState.arr[queueState.front];
     queueState.arr[queueState.front] = null;
@@ -1019,7 +1005,7 @@ public:
     
     queueState.size--;
     renderStudents(queueState.arr, {}, -1, 'linear-queue');
-    if (!stopAnimation) alert('Dequeued value: ' + dequeuedVal);
+    alert('Dequeued value: ' + dequeuedVal);
   }
 
   async function circularQueueDemo() {
@@ -1054,7 +1040,6 @@ public:
     
     renderStudents(queueState.arr, { active: queueState.front }, -1, 'circular-queue');
     await sleep(800);
-    if (stopAnimation) return;
     
     const dequeuedVal = queueState.arr[queueState.front];
     queueState.arr[queueState.front] = null;
@@ -1068,7 +1053,7 @@ public:
     
     queueState.size--;
     renderStudents(queueState.arr, {}, -1, 'circular-queue');
-    if (!stopAnimation) alert('Dequeued value: ' + dequeuedVal);
+    alert('Dequeued value: ' + dequeuedVal);
   }
 
   async function dequeAddFront() {
@@ -1084,7 +1069,6 @@ public:
     
     renderStudents(queueState.arr, {}, -1, 'deque');
     await sleep(800);
-    if (stopAnimation) return;
     
     const val = Number(key);
     if (queueState.isEmpty()) {
@@ -1110,7 +1094,6 @@ public:
     
     renderStudents(queueState.arr, {}, -1, 'deque');
     await sleep(800);
-    if (stopAnimation) return;
     
     const val = Number(key);
     if (queueState.isEmpty()) {
@@ -1130,7 +1113,6 @@ public:
     }
     renderStudents(queueState.arr, { active: queueState.front }, -1, 'deque');
     await sleep(800);
-    if (stopAnimation) return;
     
     const removedVal = queueState.arr[queueState.front];
     queueState.arr[queueState.front] = null;
@@ -1143,7 +1125,7 @@ public:
     
     queueState.size--;
     renderStudents(queueState.arr, {}, -1, 'deque');
-    if (!stopAnimation) alert('Removed from front: ' + removedVal);
+    alert('Removed from front: ' + removedVal);
   }
 
   async function dequeRemoveRear() {
@@ -1153,7 +1135,6 @@ public:
     }
     renderStudents(queueState.arr, { active: queueState.rear }, -1, 'deque');
     await sleep(800);
-    if (stopAnimation) return;
     
     const removedVal = queueState.arr[queueState.rear];
     queueState.arr[queueState.rear] = null;
@@ -1166,7 +1147,7 @@ public:
 
     queueState.size--;
     renderStudents(queueState.arr, {}, -1, 'deque');
-    if (!stopAnimation) alert('Removed from rear: ' + removedVal);
+    alert('Removed from rear: ' + removedVal);
   }
 
   async function priorityQueueEnqueue() {
@@ -1197,7 +1178,6 @@ public:
     
     renderStudents(queueState.arr, { active: 0 }, -1, 'priority-queue');
     await sleep(800);
-    if (stopAnimation) return;
     
     arr.shift();
     queueState.arr = new Array(QUEUE_CAPACITY).fill(null);
@@ -1205,7 +1185,7 @@ public:
     queueState.size = arr.length;
     
     renderStudents(queueState.arr, {}, -1, 'priority-queue');
-    if (!stopAnimation) alert('Dequeued value (highest priority): ' + dequeuedVal);
+    alert('Dequeued value (highest priority): ' + dequeuedVal);
   }
 
   function sllInsert(val) {
@@ -1380,18 +1360,9 @@ public:
       controlsDiv.appendChild(createButton('Push', stackPush));
       controlsDiv.appendChild(createButton('Pop', stackPop));
     }
-    
-    // Add Stop button for all algorithms
-    const stopBtn = createButton('Stop', () => {
-      stopAnimation = true;
-    });
-    stopBtn.style.backgroundColor = '#dc3545';
-    stopBtn.style.marginLeft = '1em';
-    controlsDiv.appendChild(stopBtn);
   }
 
   function changeAlgorithm(algo) {
-    stopAnimation = false;
     currentAlgo = algo;
     setActiveTab(algo);
     cppCodePre.textContent = codes[algo];
