@@ -93,7 +93,7 @@
   }
   .intro-text {
     text-align: center;
-    color: #555;
+    color: #2d2d2d;
     margin-bottom: 2em;
     line-height: 1.6;
     max-width: 700px;
@@ -108,7 +108,7 @@
   }
   label {
     font-weight: bold;
-    color: #495057;
+    color: #2d2d2d;
     margin-right: 10px;
   }
   select {
@@ -117,7 +117,7 @@
     border-radius: 8px;
     background-color: #e9ecef;
     font-size: 1em;
-    color: #333;
+    color: #000;
     cursor: pointer;
     transition: all 0.3s ease;
     min-width: 200px;
@@ -241,7 +241,7 @@
   }
   .student-label {
     font-size: 0.8em;
-    color: #555;
+    color: #2d2d2d;
     margin-top: 0.5em;
     font-weight: bold;
     user-select: none;
@@ -258,13 +258,14 @@
   button {
     background: #007bff;
     border: none;
-    color: white;
+    color: #ffffff;
     padding: 0.8em 1.8em;
     font-size: 1em;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
     user-select: none;
+    font-weight: 600;
   }
   button:hover {
     background: #0056b3;
@@ -410,6 +411,7 @@
 </style>
 </head>
 <body>
+<main>
 <div class="main-wrapper">
   <!-- Left Side Ad -->
   <div class="side-ad">
@@ -495,6 +497,7 @@
     </script>
   </div>
 </div>
+</main>
 
 <script>
   const INITIAL_STUDENTS = [45, 23, 89, 12, 78, 56, 34];
@@ -761,10 +764,16 @@ public:
 };`
   };
 
+  // Get DOM elements with null checks
   const studentDbDiv = document.getElementById('student-db');
   const cppCodePre = document.getElementById('cpp-code');
   const controlsDiv = document.getElementById('controls');
   const algorithmSelect = document.getElementById('algorithm-select');
+  
+  // Verify all required elements exist
+  if (!studentDbDiv || !cppCodePre || !controlsDiv || !algorithmSelect) {
+    console.error('Required DOM elements not found');
+  }
 
   let currentAlgo = 'bubble';
 
@@ -1429,7 +1438,12 @@ public:
     changeAlgorithm(event.target.value);
   });
 
-  changeAlgorithm('bubble');
+  // Initialize the application with error handling
+  try {
+    changeAlgorithm('bubble');
+  } catch (error) {
+    console.error('Error initializing application:', error);
+  }
 </script>
 </body>
 </html>
