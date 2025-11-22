@@ -14,7 +14,9 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="shortcut icon" type="image/svg+xml" href="/favicon.svg" />
 <title>Data Structures & Algorithms Visualizer</title>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5669546026348473"
+<!-- Deferred third-party scripts to prevent render blocking -->
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+<script defer src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5669546026348473"
      crossorigin="anonymous"></script>
 <script type="application/ld+json">
 {
@@ -1412,6 +1414,13 @@ public:
 
   algorithmSelect.addEventListener('change', (event) => {
     changeAlgorithm(event.target.value);
+  });
+
+  // Global error handler to prevent console errors from breaking functionality
+  window.addEventListener('error', (event) => {
+    console.warn('Runtime error caught:', event.error);
+    // Prevent error from breaking the app
+    event.preventDefault();
   });
 
   // Initialize the application with error handling
