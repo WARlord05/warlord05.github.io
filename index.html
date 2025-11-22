@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Student Database Algorithms Visualization</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5669546026348473"
+     crossorigin="anonymous"></script>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 2em;
+    background-color: #f0f2f5;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+  .main-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2em;
+    width: 100%;
+    max-width: 1400px;
+  }
+  .side-ad {
+    flex-shrink: 0;
+  }
+  .container {
+    width: 100%;
+    max-width: 900px;
+    background: #ffffff;
+    padding: 2.5em;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+  }
+  h1 {
+    text-align: center;
+    color: #004085;
+    font-weight: 600;
+    margin-bottom: 0.8em;
+  }
+  .intro-text {
+    text-align: center;
+    color: #555;
+    margin-bottom: 2em;
+    line-height: 1.6;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .dropdown-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5em;
+  }
+  label {
+    font-weight: bold;
+    color: #495057;
+    margin-right: 10px;
+  }
+  select {
+    padding: 0.6em 1em;
+    border: 1px solid #dcdfe3;
+    border-radius: 8px;
+    background-color: #e9ecef;
+    font-size: 1em;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 200px;
+  }
+  select:hover {
+    border-color: #b8c0c8;
+  }
+  select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  }
+  pre {
+    background: #282c34;
+    color: #abb2bf;
+    padding: 1.5em;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 0.9em;
+    line-height: 1.4;
+    border: 1px solid #3a3f4a;
+  }
+  .database {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin: 3em 0;
+    gap: 0.8em;
+    min-height: 150px;
+  }
+  .student-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    transition: transform 0.4s ease-in-out;
+  }
+  .student {
+    padding: 0.8em 1.2em;
+    border-radius: 8px;
+    background-color: #e7f5ff;
+    border: 2px solid #b8daff;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: center;
+    transition: all 0.4s ease;
+    user-select: none;
+    cursor: default;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  .student.active {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    transform: scale(1.1);
+  }
+  .student.found {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+    animation: found-pulse 1s forwards;
+  }
+  .student.compared {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+  .student.front-ptr, .student.deque-front {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px #007bff;
+    animation: pulse-border 1s infinite alternate;
+  }
+  .student.rear-ptr, .student.deque-rear {
+    border-color: #fd7e14;
+    box-shadow: 0 0 0 3px #fd7e14;
+    animation: pulse-border 1s infinite alternate;
+  }
+  .student.front-rear-ptr {
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 3px #6f42c1;
+    animation: pulse-border 1s infinite alternate;
+  }
+  .student.empty {
+    background-color: transparent;
+    border: 2px dashed #a0a0a0;
+    color: #a0a0a0;
+  }
+  .student-label {
+    font-size: 0.8em;
+    color: #555;
+    margin-top: 0.5em;
+    font-weight: bold;
+    user-select: none;
+  }
+  .controls {
+    text-align: center;
+    margin-top: 2em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+  }
+  button {
+    background: #007bff;
+    border: none;
+    color: white;
+    padding: 0.8em 1.8em;
+    font-size: 1em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    user-select: none;
+  }
+  button:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  button:disabled {
+    background: #90caf9;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  input[type="number"] {
+    width: 90px;
+    padding: 0.6em 0.8em;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+    margin-left: 0.5em;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  input[type="number"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+  }
+  .linked-list-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+    margin: 3em 0;
+    position: relative;
+    padding: 20px 0;
+  }
+  .node-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  .node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f7f9fc;
+    border: 2px solid #dcdfe3;
+    border-radius: 8px;
+    padding: 10px;
+    transition: transform 0.3s ease, border-color 0.3s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    min-width: 80px;
+  }
+  .node.active {
+    transform: translateY(-5px);
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+  }
+  .node-value {
+    font-weight: bold;
+    font-size: 1.2em;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #dcdfe3;
+    width: 100%;
+    text-align: center;
+  }
+  .node-pointers {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-top: 5px;
+  }
+  .arrow {
+    font-size: 2em;
+    color: #495057;
+    margin: 0 5px;
+  }
+  .dll-arrows {
+    display: flex;
+    align-items: center;
+    margin: 0 5px;
+  }
+  .dll-arrow {
+    font-size: 1.5em;
+    color: #495057;
+  }
+  .cll-arrow {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    font-size: 2em;
+    color: #495057;
+  }
+  .cll-arrow::after {
+    content: '→';
+    position: absolute;
+    top: -35px;
+    left: -20px;
+    transform: rotate(90deg);
+  }
+  .cll-arrow-line {
+    border-top: 2px solid #495057;
+    position: absolute;
+    top: calc(50% + 15px);
+    height: 1px;
+    width: 95%;
+    left: 2.5%;
+  }
+  .stack-container {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 3em auto;
+    gap: 0.5em;
+    min-height: 150px;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 1em;
+    width: 150px;
+  }
+  .stack-container .student-wrapper {
+    margin: 0;
+  }
+  .stack-container .student-label {
+    position: absolute;
+    top: -25px;
+  }
+  .stack-container .student:last-child {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px #007bff;
+    animation: pulse-border 1s infinite alternate;
+  }
+
+  @keyframes found-pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+    70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+  }
+
+  @keyframes pulse-border {
+    0% { box-shadow: 0 0 0 0 transparent; }
+    100% { box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.6); }
+  }
+</style>
+</head>
+<body>
+<div class="main-wrapper">
+  <!-- Left Side Ad -->
+  <div class="side-ad">
+    <!-- Sidebar Left -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-5669546026348473"
+         data-ad-slot="1767732028"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+
+<div class="container">
+  <h1>Data Structures & Algorithms Visualizer</h1>
+  <p class="intro-text">
+    Welcome to the <b>Data Structures & Algorithms Visualizer</b>, an interactive tool designed to help you understand fundamental concepts in computer science. This application lets you select different algorithms and data structures to see how they work in real-time. By visualizing key operations, you can gain a deeper and more intuitive understanding of complex processes like sorting, searching, and managing data in structures like stacks, queues, and linked lists.
+  </p>
+
+  <!-- Google Ad - Top Banner -->
+  <div style="text-align: center; margin-bottom: 1.5em;">
+    <!-- Top Banner -->
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:728px;height:90px"
+         data-ad-client="ca-pub-5669546026348473"
+         data-ad-slot="4310134881"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+
+  <div class="dropdown-container">
+    <label for="algorithm-select">Choose an Algorithm or Data Structure:</label>
+    <select id="algorithm-select">
+      <optgroup label="Sorting & Searching">
+        <option value="bubble">Bubble Sort</option>
+        <option value="linear">Linear Search</option>
+        <option value="binary">Binary Search</option>
+      </optgroup>
+      <optgroup label="Queues">
+        <option value="linear-queue">Linear Queue</option>
+        <option value="circular-queue">Circular Queue</option>
+        <option value="deque">Deque</option>
+        <option value="priority-queue">Priority Queue</option>
+      </optgroup>
+      <optgroup label="Linked Lists">
+        <option value="sll">Singly Linked List</option>
+        <option value="dll">Doubly Linked List</option>
+        <option value="cll">Circular Linked List</option>
+      </optgroup>
+      <optgroup label="Stack">
+        <option value="stack">Stack</option>
+      </optgroup>
+    </select>
+  </div>
+
+  <div id="code-container">
+    <pre id="cpp-code"></pre>
+  </div>
+
+  <div class="database" id="student-db"></div>
+
+  <div class="controls" id="controls">
+  </div>
+</div>
+
+  <!-- Right Side Ad -->
+  <div class="side-ad">
+    <!-- Sidebar Right -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-5669546026348473"
+         data-ad-slot="5623216557"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+</div>
+
+<script>
+  const INITIAL_STUDENTS = [45, 23, 89, 12, 78, 56, 34];
+  let students = [...INITIAL_STUDENTS];
+  let sortedStudents = [...INITIAL_STUDENTS].sort((a, b) => a - b);
+  const QUEUE_CAPACITY = 7;
+
+  let linkedListState = [];
+  let stackState = [];
+
+  const codes = {
+    bubble: `void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}`,
+    linear: `int linearSearch(int arr[], int n, int key) {
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == key)
+            return i;
+    }
+    return -1;
+}`,
+    binary: `int binarySearch(int arr[], int n, int key) {
+    int low = 0, high = n - 1;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (arr[mid] == key)
+            return mid;
+        else if (arr[mid] < key)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    return -1;
+}`,
+    "linear-queue": `class LinearQueue {
+private:
+    int arr[MAX_SIZE];
+    int front, rear;
+public:
+    LinearQueue() {
+        front = -1;
+        rear = -1;
+    }
+    bool isEmpty() { return front == -1; }
+    bool isFull() { return rear == MAX_SIZE - 1; }
+    void enqueue(int x) {
+        if (isFull()) return;
+        if (isEmpty()) front = 0;
+        rear++;
+        arr[rear] = x;
+    }
+    int dequeue() {
+        if (isEmpty()) return -1;
+        int x = arr[front];
+        if (front == rear) front = rear = -1;
+        else front++;
+        return x;
+    }
+};`,
+    "circular-queue": `class CircularQueue {
+private:
+    int arr[MAX_SIZE];
+    int front, rear;
+    int size;
+public:
+    CircularQueue() {
+        front = -1;
+        rear = -1;
+        size = 0;
+    }
+    bool isEmpty() { return size == 0; }
+    bool isFull() { return size == MAX_SIZE; }
+    void enqueue(int x) {
+        if (isFull()) return;
+        rear = (rear + 1) % MAX_SIZE;
+        arr[rear] = x;
+        if (front == -1) front = 0;
+        size++;
+    }
+    int dequeue() {
+        if (isEmpty()) return -1;
+        int x = arr[front];
+        front = (front + 1) % MAX_SIZE;
+        size--;
+        if (size == 0) front = rear = -1;
+        return x;
+    }
+};`,
+    "deque": `class Deque {
+private:
+    int arr[MAX_SIZE];
+    int front, rear;
+    int size;
+public:
+    Deque() {
+        front = -1;
+        rear = 0;
+        size = 0;
+    }
+    bool isFull() { return size == MAX_SIZE; }
+    bool isEmpty() { return size == 0; }
+    void addFront(int key) {
+        if (isFull()) return;
+        if (isEmpty()) { front = 0; rear = 0; }
+        else if (front == 0) front = MAX_SIZE - 1;
+        else front--;
+        arr[front] = key;
+        size++;
+    }
+    void addRear(int key) {
+        if (isFull()) return;
+        if (isEmpty()) { front = 0; rear = 0; }
+        else if (rear == MAX_SIZE - 1) rear = 0;
+        else rear++;
+        arr[rear] = key;
+        size++;
+    }
+};`,
+    "priority-queue": `class PriorityQueue {
+private:
+    vector<int> arr;
+public:
+    void enqueue(int x) {
+        arr.push_back(x);
+        sort(arr.begin(), arr.end());
+    }
+    int dequeue() {
+        if (arr.empty()) return -1;
+        int x = arr[0];
+        arr.erase(arr.begin());
+        return x;
+    }
+    int peek() {
+        if (arr.empty()) return -1;
+        return arr[0];
+    }
+};`,
+    "sll": `struct Node {
+    int data;
+    Node* next;
+};
+class SinglyLinkedList {
+public:
+    Node* head;
+    SinglyLinkedList() { head = nullptr; }
+    void insertAtEnd(int data) {
+        Node* newNode = new Node{data, nullptr};
+        if (head == nullptr) {
+            head = newNode;
+        } else {
+            Node* current = head;
+            while (current->next != nullptr) {
+                current = current->next;
+            }
+            current->next = newNode;
+        }
+    }
+    void deleteFromBeginning() {
+        if (head != nullptr) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+        }
+    }
+};`,
+    "dll": `struct Node {
+    int data;
+    Node* next;
+    Node* prev;
+};
+class DoublyLinkedList {
+public:
+    Node* head;
+    DoublyLinkedList() { head = nullptr; }
+    void insertAtFront(int data) {
+        Node* newNode = new Node{data, head, nullptr};
+        if (head != nullptr) {
+            head->prev = newNode;
+        }
+        head = newNode;
+    }
+    void insertAtEnd(int data) {
+        Node* newNode = new Node{data, nullptr, nullptr};
+        if (head == nullptr) {
+            head = newNode;
+        } else {
+            Node* current = head;
+            while (current->next != nullptr) {
+                current = current->next;
+            }
+            current->next = newNode;
+            newNode->prev = current;
+        }
+    }
+};`,
+    "cll": `struct Node {
+    int data;
+    Node* next;
+};
+class CircularLinkedList {
+public:
+    Node* head;
+    CircularLinkedList() { head = nullptr; }
+    void insertAtEnd(int data) {
+        Node* newNode = new Node{data, nullptr};
+        if (head == nullptr) {
+            head = newNode;
+            head->next = head;
+        } else {
+            Node* current = head;
+            while (current->next != head) {
+                current = current->next;
+            }
+            current->next = newNode;
+            newNode->next = head;
+        }
+    }
+    void deleteFromBeginning() {
+        if (head == nullptr) return;
+        if (head->next == head) {
+            delete head;
+            head = nullptr;
+        } else {
+            Node* last = head;
+            while (last->next != head) {
+                last = last->next;
+            }
+            Node* temp = head;
+            head = head->next;
+            last->next = head;
+            delete temp;
+        }
+    }
+};`,
+    "stack": `class Stack {
+private:
+    std::vector<int> data;
+public:
+    bool isEmpty() {
+        return data.empty();
+    }
+    void push(int value) {
+        data.push_back(value);
+    }
+    void pop() {
+        if (!data.empty()) {
+            data.pop_back();
+        }
+    }
+    int top() {
+        if (data.empty()) {
+            return -1;
+        }
+        return data.back();
+    }
+};`
+  };
+
+  const studentDbDiv = document.getElementById('student-db');
+  const cppCodePre = document.getElementById('cpp-code');
+  const controlsDiv = document.getElementById('controls');
+  const algorithmSelect = document.getElementById('algorithm-select');
+
+  let currentAlgo = 'bubble';
+
+  let queueState = {
+    arr: new Array(QUEUE_CAPACITY).fill(null),
+    front: -1,
+    rear: -1,
+    size: 0,
+    isEmpty: function() {
+      return this.size === 0;
+    },
+    isFull: function() {
+      return this.size === QUEUE_CAPACITY;
+    }
+  };
+
+  function renderStudents(arr, highlightIndices = {}, foundIndex = -1, type = 'default') {
+    studentDbDiv.innerHTML = '';
+    studentDbDiv.classList.remove('stack-container');
+    studentDbDiv.classList.add('database');
+    
+    arr.forEach((val, i) => {
+      const wrapper = document.createElement('div');
+      wrapper.classList.add('student-wrapper');
+      
+      const div = document.createElement('div');
+      div.classList.add('student');
+      if (val === null) {
+        div.classList.add('empty');
+        div.textContent = '';
+      } else {
+        div.textContent = val;
+      }
+      
+      if (i === foundIndex) div.classList.add('found');
+      if (highlightIndices.compared === i) div.classList.add('compared');
+      if (highlightIndices.active === i) div.classList.add('active');
+
+      if (type === 'linear-queue' || type === 'circular-queue' || type === 'deque' || type === 'priority-queue') {
+        if (queueState.size > 0 && val !== null) {
+          if (type === 'linear-queue' || type === 'circular-queue') {
+            if (i === queueState.front && i === queueState.rear) {
+              div.classList.add('front-rear-ptr');
+            } else {
+              if (i === queueState.front) div.classList.add('front-ptr');
+              if (i === queueState.rear) div.classList.add('rear-ptr');
+            }
+          } else if (type === 'deque') {
+            if (i === queueState.front) div.classList.add('deque-front');
+            if (i === queueState.rear) div.classList.add('deque-rear');
+          }
+        }
+      }
+
+      const label = document.createElement('span');
+      label.classList.add('student-label');
+      if ((type === 'linear-queue' || type === 'circular-queue' || type === 'deque') && queueState.size > 0) {
+        if (i === queueState.front && i === queueState.rear) {
+          label.textContent = 'Front/Rear';
+        } else if (i === queueState.front) {
+          label.textContent = 'Front';
+        } else if (i === queueState.rear) {
+          label.textContent = 'Rear';
+        } else {
+          label.textContent = i;
+        }
+      } else {
+        label.textContent = i;
+      }
+      wrapper.appendChild(label);
+      wrapper.appendChild(div);
+      studentDbDiv.appendChild(wrapper);
+    });
+  }
+
+  function renderLinkedList(nodes, type) {
+    studentDbDiv.innerHTML = '';
+    studentDbDiv.classList.remove('database');
+    studentDbDiv.classList.remove('stack-container');
+    studentDbDiv.classList.add('linked-list-container');
+    
+    nodes.forEach((node, i) => {
+      const nodeWrapper = document.createElement('div');
+      nodeWrapper.classList.add('node-wrapper');
+
+      const nodeDiv = document.createElement('div');
+      nodeDiv.classList.add('node');
+      
+      const valueDiv = document.createElement('div');
+      valueDiv.classList.add('node-value');
+      valueDiv.textContent = node.value;
+      
+      nodeDiv.appendChild(valueDiv);
+
+      if (type === 'dll') {
+        const pointersDiv = document.createElement('div');
+        pointersDiv.classList.add('node-pointers');
+        pointersDiv.textContent = `prev | next`;
+        nodeDiv.appendChild(pointersDiv);
+      }
+      
+      nodeWrapper.appendChild(nodeDiv);
+      
+      if (i < nodes.length - 1) {
+        if (type === 'sll' || type === 'cll') {
+          const arrow = document.createElement('div');
+          arrow.classList.add('arrow');
+          arrow.innerHTML = '&#8594;';
+          nodeWrapper.appendChild(arrow);
+        } else if (type === 'dll') {
+          const dllArrows = document.createElement('div');
+          dllArrows.classList.add('dll-arrows');
+          dllArrows.innerHTML = '&#8596;';
+          nodeWrapper.appendChild(dllArrows);
+        }
+      }
+      
+      studentDbDiv.appendChild(nodeWrapper);
+    });
+
+    if (type === 'cll' && nodes.length > 0) {
+      const lastNode = studentDbDiv.lastElementChild.querySelector('.node');
+      const arrow = document.createElement('div');
+      arrow.classList.add('cll-arrow');
+      arrow.innerHTML = '&#8592;';
+      studentDbDiv.appendChild(arrow);
+    }
+  }
+
+  function renderStack(stack) {
+    studentDbDiv.innerHTML = '';
+    studentDbDiv.classList.remove('database');
+    studentDbDiv.classList.remove('linked-list-container');
+    studentDbDiv.classList.add('stack-container');
+    
+    stack.forEach((val, i) => {
+      const wrapper = document.createElement('div');
+      wrapper.classList.add('student-wrapper');
+      
+      const div = document.createElement('div');
+      div.classList.add('student');
+      div.textContent = val;
+
+      if (i === stack.length - 1) {
+          const label = document.createElement('span');
+          label.classList.add('student-label');
+          label.textContent = 'TOP';
+          wrapper.appendChild(label);
+      }
+      
+      wrapper.appendChild(div);
+      studentDbDiv.appendChild(wrapper);
+    });
+  }
+
+  function setActiveTab(algo) {
+    const options = algorithmSelect.options;
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].value === algo) {
+            options[i].selected = true;
+            break;
+        }
+    }
+  }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  function clearControls() {
+    controlsDiv.innerHTML = '';
+  }
+
+  async function bubbleSortDemo() {
+    let arr = [...INITIAL_STUDENTS];
+    let n = arr.length;
+    renderStudents(arr);
+    for (let i = 0; i < n - 1; i++) {
+      for (let j = 0; j < n - i - 1; j++) {
+        renderStudents(arr, { compared: j, active: j + 1 });
+        await sleep(400);
+        if (arr[j] > arr[j + 1]) {
+          [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+          renderStudents(arr, { compared: j, active: j + 1 });
+          await sleep(400);
+        }
+      }
+    }
+    renderStudents(arr);
+  }
+
+  async function linearSearchDemo(key) {
+    let arr = [...INITIAL_STUDENTS];
+    let n = arr.length;
+    renderStudents(arr);
+    for (let i = 0; i < n; i++) {
+      renderStudents(arr, { active: i });
+      await sleep(500);
+      if (arr[i] === key) {
+        renderStudents(arr, {}, i);
+        alert('Student ID ' + key + ' found at index ' + i);
+        return;
+      }
+    }
+    alert('Student ID ' + key + ' not found');
+    renderStudents(arr);
+  }
+
+  async function binarySearchDemo(key) {
+    let arr = [...sortedStudents];
+    let low = 0, high = arr.length - 1;
+    renderStudents(arr);
+    while (low <= high) {
+      let mid = Math.floor(low + (high - low) / 2);
+      renderStudents(arr, { active: mid });
+      await sleep(600);
+      if (arr[mid] === key) {
+        renderStudents(arr, {}, mid);
+        alert('Student ID ' + key + ' found at index ' + mid);
+        return;
+      } else if (arr[mid] < key) {
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+    alert('Student ID ' + key + ' not found');
+    renderStudents(arr);
+  }
+
+  async function linearQueueDemo() {
+    const key = document.getElementById('queue-value').value;
+    if (key === '') {
+      alert('Please enter a value to enqueue.');
+      return;
+    }
+    if (queueState.isFull()) {
+      alert('Queue is full!');
+      return;
+    }
+    
+    const val = Number(key);
+    if (queueState.isEmpty()) {
+      queueState.front = 0;
+    }
+    queueState.rear++;
+    queueState.arr[queueState.rear] = val;
+    queueState.size++;
+    
+    renderStudents(queueState.arr, {}, -1, 'linear-queue');
+  }
+
+  async function linearQueueDequeue() {
+    if (queueState.isEmpty()) {
+      alert('Queue is empty!');
+      return;
+    }
+    
+    renderStudents(queueState.arr, { active: queueState.front }, -1, 'linear-queue');
+    await sleep(800);
+    
+    const dequeuedVal = queueState.arr[queueState.front];
+    queueState.arr[queueState.front] = null;
+    
+    if (queueState.front === queueState.rear) {
+      queueState.front = -1;
+      queueState.rear = -1;
+    } else {
+      queueState.front++;
+    }
+    
+    queueState.size--;
+    renderStudents(queueState.arr, {}, -1, 'linear-queue');
+    alert('Dequeued value: ' + dequeuedVal);
+  }
+
+  async function circularQueueDemo() {
+    const key = document.getElementById('queue-value').value;
+    if (key === '') {
+      alert('Please enter a value to enqueue.');
+      return;
+    }
+    if (queueState.isFull()) {
+      alert('Queue is full!');
+      return;
+    }
+    
+    const val = Number(key);
+    if (queueState.isEmpty()) {
+      queueState.front = 0;
+      queueState.rear = 0;
+    } else {
+      queueState.rear = (queueState.rear + 1) % QUEUE_CAPACITY;
+    }
+    queueState.arr[queueState.rear] = val;
+    queueState.size++;
+    
+    renderStudents(queueState.arr, {}, -1, 'circular-queue');
+  }
+
+  async function circularQueueDequeue() {
+    if (queueState.isEmpty()) {
+      alert('Queue is empty!');
+      return;
+    }
+    
+    renderStudents(queueState.arr, { active: queueState.front }, -1, 'circular-queue');
+    await sleep(800);
+    
+    const dequeuedVal = queueState.arr[queueState.front];
+    queueState.arr[queueState.front] = null;
+    
+    if (queueState.size === 1) {
+      queueState.front = -1;
+      queueState.rear = -1;
+    } else {
+      queueState.front = (queueState.front + 1) % QUEUE_CAPACITY;
+    }
+    
+    queueState.size--;
+    renderStudents(queueState.arr, {}, -1, 'circular-queue');
+    alert('Dequeued value: ' + dequeuedVal);
+  }
+
+  async function dequeAddFront() {
+    const key = document.getElementById('deque-value').value;
+    if (key === '') {
+      alert('Please enter a value.');
+      return;
+    }
+    if (queueState.isFull()) {
+      alert('Deque is full!');
+      return;
+    }
+    
+    renderStudents(queueState.arr, {}, -1, 'deque');
+    await sleep(800);
+    
+    const val = Number(key);
+    if (queueState.isEmpty()) {
+      queueState.front = queueState.rear = 0;
+    } else {
+      queueState.front = (queueState.front - 1 + QUEUE_CAPACITY) % QUEUE_CAPACITY;
+    }
+    queueState.arr[queueState.front] = val;
+    queueState.size++;
+    renderStudents(queueState.arr, {}, -1, 'deque');
+  }
+  
+  async function dequeAddRear() {
+    const key = document.getElementById('deque-value').value;
+    if (key === '') {
+      alert('Please enter a value.');
+      return;
+    }
+    if (queueState.isFull()) {
+      alert('Deque is full!');
+      return;
+    }
+    
+    renderStudents(queueState.arr, {}, -1, 'deque');
+    await sleep(800);
+    
+    const val = Number(key);
+    if (queueState.isEmpty()) {
+      queueState.front = queueState.rear = 0;
+    } else {
+      queueState.rear = (queueState.rear + 1) % QUEUE_CAPACITY;
+    }
+    queueState.arr[queueState.rear] = val;
+    queueState.size++;
+    renderStudents(queueState.arr, {}, -1, 'deque');
+  }
+
+  async function dequeRemoveFront() {
+    if (queueState.isEmpty()) {
+      alert('Deque is empty!');
+      return;
+    }
+    renderStudents(queueState.arr, { active: queueState.front }, -1, 'deque');
+    await sleep(800);
+    
+    const removedVal = queueState.arr[queueState.front];
+    queueState.arr[queueState.front] = null;
+    
+    if (queueState.size === 1) {
+      queueState.front = queueState.rear = -1;
+    } else {
+      queueState.front = (queueState.front + 1) % QUEUE_CAPACITY;
+    }
+    
+    queueState.size--;
+    renderStudents(queueState.arr, {}, -1, 'deque');
+    alert('Removed from front: ' + removedVal);
+  }
+
+  async function dequeRemoveRear() {
+    if (queueState.isEmpty()) {
+      alert('Deque is empty!');
+      return;
+    }
+    renderStudents(queueState.arr, { active: queueState.rear }, -1, 'deque');
+    await sleep(800);
+    
+    const removedVal = queueState.arr[queueState.rear];
+    queueState.arr[queueState.rear] = null;
+    
+    if (queueState.size === 1) {
+      queueState.front = queueState.rear = -1;
+    } else {
+      queueState.rear = (queueState.rear - 1 + QUEUE_CAPACITY) % QUEUE_CAPACITY;
+    }
+
+    queueState.size--;
+    renderStudents(queueState.arr, {}, -1, 'deque');
+    alert('Removed from rear: ' + removedVal);
+  }
+
+  async function priorityQueueEnqueue() {
+    const key = document.getElementById('priority-value').value;
+    if (key === '') {
+      alert('Please enter a value.');
+      return;
+    }
+    const arr = queueState.arr.filter(val => val !== null);
+    arr.push(Number(key));
+    arr.sort((a, b) => a - b);
+    
+    queueState.arr = new Array(QUEUE_CAPACITY).fill(null);
+    arr.forEach((val, i) => queueState.arr[i] = val);
+    queueState.size = arr.length;
+    
+    renderStudents(queueState.arr, {}, -1, 'priority-queue');
+  }
+
+  async function priorityQueueDequeue() {
+    if (queueState.isEmpty()) {
+      alert('Priority Queue is empty!');
+      return;
+    }
+    
+    const arr = queueState.arr.filter(val => val !== null);
+    const dequeuedVal = arr[0];
+    
+    renderStudents(queueState.arr, { active: 0 }, -1, 'priority-queue');
+    await sleep(800);
+    
+    arr.shift();
+    queueState.arr = new Array(QUEUE_CAPACITY).fill(null);
+    arr.forEach((val, i) => queueState.arr[i] = val);
+    queueState.size = arr.length;
+    
+    renderStudents(queueState.arr, {}, -1, 'priority-queue');
+    alert('Dequeued value (highest priority): ' + dequeuedVal);
+  }
+
+  function sllInsert(val) {
+    linkedListState.push({ value: val });
+    renderLinkedList(linkedListState, 'sll');
+  }
+
+  function sllDelete() {
+    if (linkedListState.length > 0) {
+      linkedListState.shift();
+      renderLinkedList(linkedListState, 'sll');
+    } else {
+      alert('List is empty!');
+    }
+  }
+
+  function dllInsertFront(val) {
+    linkedListState.unshift({ value: val });
+    renderLinkedList(linkedListState, 'dll');
+  }
+
+  function dllInsertEnd(val) {
+    linkedListState.push({ value: val });
+    renderLinkedList(linkedListState, 'dll');
+  }
+  
+  function dllDeleteFront() {
+    if (linkedListState.length > 0) {
+      linkedListState.shift();
+      renderLinkedList(linkedListState, 'dll');
+    } else {
+      alert('List is empty!');
+    }
+  }
+  
+  function dllDeleteEnd() {
+    if (linkedListState.length > 0) {
+      linkedListState.pop();
+      renderLinkedList(linkedListState, 'dll');
+    } else {
+      alert('List is empty!');
+    }
+  }
+
+  function cllInsert(val) {
+    linkedListState.push({ value: val });
+    renderLinkedList(linkedListState, 'cll');
+  }
+
+  function cllDelete() {
+    if (linkedListState.length > 0) {
+      linkedListState.shift();
+      renderLinkedList(linkedListState, 'cll');
+    } else {
+      alert('List is empty!');
+    }
+  }
+
+  function stackPush() {
+      const key = document.getElementById('stack-value').value;
+      if (key === '') {
+        alert('Please enter a value to push.');
+        return;
+      }
+      stackState.push(Number(key));
+      renderStack(stackState);
+  }
+
+  function stackPop() {
+      if (stackState.length > 0) {
+          const poppedVal = stackState.pop();
+          renderStack(stackState);
+          alert('Popped value: ' + poppedVal);
+      } else {
+          alert('Stack is empty!');
+      }
+  }
+
+  function setupControls(algo) {
+    clearControls();
+    const createButton = (text, onClick) => {
+      const btn = document.createElement('button');
+      btn.textContent = text;
+      btn.onclick = onClick;
+      return btn;
+    };
+    const createInput = (id, placeholder) => {
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.min = '0';
+      input.placeholder = placeholder;
+      input.id = id;
+      return input;
+    };
+    const createLabel = (text, input) => {
+      const label = document.createElement('label');
+      label.textContent = text;
+      if (input) label.appendChild(input);
+      return label;
+    };
+
+    if (algo === 'bubble') {
+      controlsDiv.appendChild(createButton('Run Bubble Sort', bubbleSortDemo));
+    } else if (algo === 'linear') {
+      const input = createInput('search-key', 'e.g. 23');
+      const label = createLabel('Enter Student ID: ', input);
+      const btn = createButton('Run Linear Search', async () => {
+        const key = Number(input.value);
+        if (isNaN(key)) {
+          alert('Please enter a valid number');
+          return;
+        }
+        btn.disabled = true; input.disabled = true;
+        await linearSearchDemo(key);
+        btn.disabled = false; input.disabled = false;
+      });
+      controlsDiv.appendChild(label);
+      controlsDiv.appendChild(btn);
+    } else if (algo === 'binary') {
+      const input = createInput('search-key', 'e.g. 23');
+      const label = createLabel('Enter Student ID: ', input);
+      const btn = createButton('Run Binary Search', async () => {
+        const key = Number(input.value);
+        if (isNaN(key)) {
+          alert('Please enter a valid number');
+          return;
+        }
+        btn.disabled = true; input.disabled = true;
+        await binarySearchDemo(key);
+        btn.disabled = false; input.disabled = false;
+      });
+      controlsDiv.appendChild(label);
+      controlsDiv.appendChild(btn);
+    } else if (algo === 'linear-queue') {
+      controlsDiv.appendChild(createLabel('Enqueue Value:', createInput('queue-value', 'e.g. 10')));
+      controlsDiv.appendChild(createButton('Enqueue', linearQueueDemo));
+      controlsDiv.appendChild(createButton('Dequeue', linearQueueDequeue));
+    } else if (algo === 'circular-queue') {
+      controlsDiv.appendChild(createLabel('Enqueue Value:', createInput('queue-value', 'e.g. 10')));
+      controlsDiv.appendChild(createButton('Enqueue', circularQueueDemo));
+      controlsDiv.appendChild(createButton('Dequeue', circularQueueDequeue));
+    } else if (algo === 'deque') {
+      controlsDiv.appendChild(createLabel('Value:', createInput('deque-value', 'e.g. 10')));
+      controlsDiv.appendChild(createButton('Add Front', dequeAddFront));
+      controlsDiv.appendChild(createButton('Add Rear', dequeAddRear));
+      controlsDiv.appendChild(createButton('Remove Front', dequeRemoveFront));
+      controlsDiv.appendChild(createButton('Remove Rear', dequeRemoveRear));
+    } else if (algo === 'priority-queue') {
+      controlsDiv.appendChild(createLabel('Enqueue Value:', createInput('priority-value', 'e.g. 10')));
+      controlsDiv.appendChild(createButton('Enqueue', priorityQueueEnqueue));
+      controlsDiv.appendChild(createButton('Dequeue', priorityQueueDequeue));
+    } else if (algo === 'sll') {
+      const input = createInput('sll-value', 'e.g. 10');
+      controlsDiv.appendChild(createLabel('Value:', input));
+      controlsDiv.appendChild(createButton('Insert End', () => sllInsert(Number(input.value))));
+      controlsDiv.appendChild(createButton('Delete Front', sllDelete));
+    } else if (algo === 'dll') {
+      const input = createInput('dll-value', 'e.g. 10');
+      controlsDiv.appendChild(createLabel('Value:', input));
+      controlsDiv.appendChild(createButton('Insert Front', () => dllInsertFront(Number(input.value))));
+      controlsDiv.appendChild(createButton('Insert End', () => dllInsertEnd(Number(input.value))));
+      controlsDiv.appendChild(createButton('Delete Front', dllDeleteFront));
+      controlsDiv.appendChild(createButton('Delete End', dllDeleteEnd));
+    } else if (algo === 'cll') {
+      const input = createInput('cll-value', 'e.g. 10');
+      controlsDiv.appendChild(createLabel('Value:', input));
+      controlsDiv.appendChild(createButton('Insert End', () => cllInsert(Number(input.value))));
+      controlsDiv.appendChild(createButton('Delete Front', cllDelete));
+    } else if (algo === 'stack') {
+      const input = createInput('stack-value', 'e.g. 10');
+      controlsDiv.appendChild(createLabel('Value:', input));
+      controlsDiv.appendChild(createButton('Push', stackPush));
+      controlsDiv.appendChild(createButton('Pop', stackPop));
+    }
+  }
+
+  function changeAlgorithm(algo) {
+    currentAlgo = algo;
+    setActiveTab(algo);
+    cppCodePre.textContent = codes[algo];
+    
+    studentDbDiv.classList.remove('linked-list-container');
+    studentDbDiv.classList.remove('stack-container');
+    studentDbDiv.classList.add('database');
+
+    if (algo === 'binary') {
+      renderStudents(sortedStudents);
+    } else if (algo.includes('queue') || algo.includes('deque')) {
+      queueState.arr = new Array(QUEUE_CAPACITY).fill(null);
+      queueState.front = -1;
+      queueState.rear = -1;
+      queueState.size = 0;
+      renderStudents(queueState.arr, {}, -1, algo);
+    } else if (algo === 'sll' || algo === 'dll' || algo === 'cll') {
+      linkedListState = [];
+      renderLinkedList(linkedListState, algo);
+    } else if (algo === 'stack') {
+      stackState = [];
+      renderStack(stackState);
+    } else {
+      renderStudents(INITIAL_STUDENTS);
+    }
+    
+    setupControls(algo);
+  }
+
+  algorithmSelect.addEventListener('change', (event) => {
+    changeAlgorithm(event.target.value);
+  });
+
+  changeAlgorithm('bubble');
+</script>
+</body>
+</html>
