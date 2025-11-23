@@ -50,6 +50,18 @@ h3 {
   margin-top: 1em;
   margin-bottom: 0.5em;
 }
+ul {
+  color: #2d2d2d;
+  line-height: 1.8;
+  margin: 1em 0;
+}
+ul li {
+  margin-bottom: 0.5em;
+}
+p {
+  color: #2d2d2d;
+  line-height: 1.6;
+}
 .intro-text {
   text-align: center;
   color: #2d2d2d;
