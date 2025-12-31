@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1024" />
+<meta name="description" content="Guide to Vercel Speed Insights integration for the Data Structures & Algorithms Visualizer." />
+<meta name="keywords" content="Vercel, Speed Insights, performance monitoring, analytics" />
+<meta name="author" content="DSA Visualizer" />
+<link rel="canonical" href="https://warlord05.github.io/speed-insights-guide.html" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Speed Insights Guide - Data Structures & Algorithms Visualizer</title>
+<link rel="preload" href="/style.css" as="style" />
+<link rel="stylesheet" href="/style.css" />
+<style>
+  .guide-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .guide-content h2 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+  }
+  .guide-content h3 {
+    margin-top: 1em;
+    margin-bottom: 0.3em;
+  }
+  .guide-content pre {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 12px;
+    overflow-x: auto;
+    font-size: 0.9em;
+  }
+  .guide-content code {
+    background-color: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+  }
+  .note-box {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 12px;
+    margin: 1em 0;
+    border-radius: 4px;
+  }
+  .guide-content ul, .guide-content ol {
+    margin: 0.5em 0;
+    padding-left: 2em;
+  }
+  .guide-content li {
+    margin: 0.3em 0;
+  }
+  .step-section {
+    margin: 2em 0;
+    padding: 1em;
+    background-color: #fafafa;
+    border-radius: 4px;
+  }
+  a.back-link {
+    display: inline-block;
+    margin-bottom: 1em;
+    color: #0066cc;
+    text-decoration: none;
+  }
+  a.back-link:hover {
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+<main>
+<div class="guide-content">
+  <a href="/" class="back-link">← Back to Data Structures & Algorithms Visualizer</a>
+  
+  <h1>Getting Started with Vercel Speed Insights</h1>
+  
+  <p>This guide will help you understand how <strong>Vercel Speed Insights</strong> is integrated into the Data Structures & Algorithms Visualizer, and how it helps monitor the performance of this application.</p>
+
+  <h2>What is Vercel Speed Insights?</h2>
+  <p>Vercel Speed Insights is a performance monitoring tool that tracks real user metrics (also known as Real User Monitoring or RUM) on your website. It measures how fast your website loads and performs for actual users, providing valuable insights into user experience metrics like:</p>
+  <ul>
+    <li><strong>Largest Contentful Paint (LCP):</strong> How quickly the main content becomes visible</li>
+    <li><strong>First Input Delay (FID):</strong> How responsive the page is to user interactions</li>
+    <li><strong>Cumulative Layout Shift (CLS):</strong> How stable the page layout is during loading</li>
+    <li><strong>Web Vitals:</strong> Core metrics that Google uses to measure user experience</li>
+  </ul>
+
+  <h2>How Speed Insights is Integrated</h2>
+  
+  <div class="step-section">
+    <h3>Step 1: Enable Speed Insights in Vercel Dashboard</h3>
+    <p>If this site is deployed on Vercel, you can enable Speed Insights through the dashboard:</p>
+    <ol>
+      <li>Go to your <a href="https://vercel.com/dashboard" target="_blank">Vercel dashboard</a></li>
+      <li>Select the <strong>warlord05.github.io</strong> project</li>
+      <li>Navigate to the <strong>Speed Insights</strong> tab</li>
+      <li>Click <strong>Enable</strong> to activate the feature</li>
+    </ol>
+    <div class="note-box">
+      <strong>💡 Note:</strong> Enabling Speed Insights will automatically add new routes scoped at <code>/_vercel/speed-insights/*</code> after your next deployment.
+    </div>
+  </div>
+
+  <h2>Implementation Details</h2>
+  
+  <p>This site uses the HTML implementation of Speed Insights, which is appropriate for static websites. The tracking script has been added to <code>index.html</code> with the following code:</p>
+  
+  <pre><code>&lt;!-- Vercel Speed Insights --&gt;
+&lt;script&gt;
+  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+&lt;/script&gt;
+&lt;script defer src="/_vercel/speed-insights/script.js"&gt;&lt;/script&gt;</code></pre>
+
+  <h3>What Each Part Does:</h3>
+  <ul>
+    <li><strong>window.si function:</strong> This creates a fallback function that queues any Speed Insights calls before the actual script loads</li>
+    <li><strong>speed-insights/script.js:</strong> The actual Speed Insights tracking script that collects performance metrics from real users</li>
+    <li><strong>defer attribute:</strong> Ensures the script loads asynchronously without blocking page rendering</li>
+  </ul>
+
+  <h2>Viewing Your Performance Data</h2>
+  
+  <div class="step-section">
+    <h3>Accessing the Speed Insights Dashboard</h3>
+    <ol>
+      <li>Visit your <a href="https://vercel.com/dashboard" target="_blank">Vercel dashboard</a></li>
+      <li>Select your project</li>
+      <li>Click the <strong>Speed Insights</strong> tab</li>
+      <li>View real-time performance metrics from your users</li>
+    </ol>
+    <div class="note-box">
+      <strong>💡 Note:</strong> It may take a few days of visitor traffic before you can see meaningful data in the dashboard.
+    </div>
+  </div>
+
+  <h2>Optimization Tips</h2>
+  
+  <p>Use the Speed Insights data to optimize your site's performance:</p>
+  <ul>
+    <li><strong>Identify bottlenecks:</strong> See where users experience slowdowns</li>
+    <li><strong>Monitor Web Vitals:</strong> Track Core Web Vitals metrics and improvements</li>
+    <li><strong>Detect regressions:</strong> Notice performance issues after deployments</li>
+    <li><strong>Understand user experience:</strong> Get insights into real-world performance, not just lab tests</li>
+    <li><strong>Track improvements:</strong> Monitor the impact of optimizations over time</li>
+  </ul>
+
+  <h2>Key Features</h2>
+  
+  <ul>
+    <li><strong>Real User Monitoring (RUM):</strong> Collects metrics from actual users visiting your site</li>
+    <li><strong>Zero Configuration:</strong> Works out of the box once enabled in the Vercel dashboard</li>
+    <li><strong>Privacy-Focused:</strong> Complies with privacy standards and doesn't collect sensitive information</li>
+    <li><strong>Web Vitals Integration:</strong> Automatically tracks Google's Core Web Vitals</li>
+    <li><strong>Historical Data:</strong> Track performance trends over time</li>
+  </ul>
+
+  <h2>Privacy and Compliance</h2>
+  
+  <p>Vercel Speed Insights is designed with privacy in mind:</p>
+  <ul>
+    <li>No personal identification information is collected</li>
+    <li>Data is anonymized and aggregated</li>
+    <li>Complies with GDPR and other privacy regulations</li>
+    <li>Optional: You can customize the data before sending using a <code>beforeSend</code> callback</li>
+  </ul>
+
+  <p>For more details, see <a href="https://vercel.com/docs/speed-insights/privacy-policy" target="_blank">Vercel Speed Insights Privacy Policy</a>.</p>
+
+  <h2>Troubleshooting</h2>
+  
+  <div class="step-section">
+    <h3>Speed Insights script not loading?</h3>
+    <p>If the script at <code>/_vercel/speed-insights/script.js</code> isn't found:</p>
+    <ul>
+      <li>Ensure Speed Insights is enabled in your Vercel dashboard</li>
+      <li>Make sure the site is deployed on Vercel</li>
+      <li>Wait for the deployment to complete after enabling Speed Insights</li>
+      <li>Check your browser's developer console for any errors</li>
+    </ul>
+  </div>
+
+  <h2>Learn More</h2>
+  
+  <p>For more information about Vercel Speed Insights:</p>
+  <ul>
+    <li><a href="https://vercel.com/docs/speed-insights" target="_blank">Speed Insights Documentation</a></li>
+    <li><a href="https://vercel.com/docs/speed-insights/package" target="_blank">Speed Insights Package Reference</a></li>
+    <li><a href="https://vercel.com/docs/speed-insights/metrics" target="_blank">Understanding Speed Insights Metrics</a></li>
+    <li><a href="https://vercel.com/docs/speed-insights/limits-and-pricing" target="_blank">Pricing and Limits</a></li>
+  </ul>
+
+  <hr style="margin-top: 2em; margin-bottom: 2em;">
+  
+  <p style="color: #666; font-size: 0.9em;">
+    This guide is specific to the Data Structures & Algorithms Visualizer deployment on Vercel.
+    For general Speed Insights information, visit the <a href="https://vercel.com/docs/speed-insights" target="_blank">official documentation</a>.
+  </p>
+</div>
+</main>
+
+<!-- Vercel Speed Insights -->
+<script>
+  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+</body>
+</html>
